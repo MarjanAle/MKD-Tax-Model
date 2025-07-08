@@ -39,8 +39,8 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
                                           "Hmisc",
                                           "openxlsx",
                                           "sm",
-                                          "ks"
-                                        
+                                          "ks",
+                                          "kableExtra" 
                                         )
 
 
@@ -164,19 +164,64 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
     
     #  to extract only English names from SUTs
     trim <- function (x) gsub("^\\s+|\\s+$", "", x) 
+    
+    # input_output_matrix_to_long_data <- function(matrix){
+    #   
+    #   matrix <- matrix %>%
+    #     dplyr::filter(...2 != "NA")
+    #   
+    #   
+    #   colnames(matrix) <- matrix[1,]
+    #   
+    #   data <- matrix[c(-1,-2),c(-1,-2)] %>% as.matrix() %>% melt()
+    #   
+    #   product_industry_name <- matrix[[2]][c(-1,-2)]
+    #   product_industry_code <- matrix[[1]][c(-1,-2)]
+    #   industry_code <-  matrix[2,c(-1,-2)] %>% as.character()
+    #   
+    #   data$Var1 <- rep(product_industry_name, time = length(industry_code))
+    #   
+    #   data <- data %>% 
+    #     dplyr::rename(PRODUCT_INDUSTRY_NAME = Var1,
+    #                   INDUSTRY_NAME = Var2)
+    #   
+    #   
+    #   data$PRODUCT_INDUSTRY_CODE <- rep(product_industry_code, time = length(industry_code))
+    #   data$INDUSTRY_CODE <- rep(industry_code, each = length(product_industry_code))
+    #   
+    #   data <- data %>% 
+    #     dplyr::select(PRODUCT_INDUSTRY_NAME, PRODUCT_INDUSTRY_CODE, INDUSTRY_NAME, INDUSTRY_CODE, value)
+    #   
+    #   
+    #   # Leave the names only in English
+    #   data$PRODUCT_INDUSTRY_NAME<-gsub("^.*\\/", "",  data$PRODUCT_INDUSTRY_NAME) %>% trim()
+    #   data$INDUSTRY_NAME<-gsub("^.*\\/", "",  data$INDUSTRY_NAME) %>% trim()
+    #   
+    #   data$value <- as.numeric(as.character(data$value))
+    #   
+    #   return(data)
+    #   
+    # }
+    
     input_output_matrix_to_long_data <- function(matrix){
       
       matrix <- matrix %>%
         dplyr::filter(...2 != "NA")
       
-      
       colnames(matrix) <- matrix[1,]
       
-      data <- matrix[c(-1,-2),c(-1,-2)] %>% as.matrix() %>% melt()
+      ## -------------------------
+      ## OPTION 2: Quick fix (keep using deprecated reshape2::melt)
+      ## -------------------------
+      data <- matrix[c(-1,-2), c(-1,-2)] %>%
+        as.matrix() %>%               
+        reshape2::melt()              
+      
+      ## -------------------------
       
       product_industry_name <- matrix[[2]][c(-1,-2)]
       product_industry_code <- matrix[[1]][c(-1,-2)]
-      industry_code <-  matrix[2,c(-1,-2)] %>% as.character()
+      industry_code <- matrix[2, c(-1,-2)] %>% as.character()
       
       data$Var1 <- rep(product_industry_name, time = length(industry_code))
       
@@ -184,23 +229,20 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
         dplyr::rename(PRODUCT_INDUSTRY_NAME = Var1,
                       INDUSTRY_NAME = Var2)
       
-      
       data$PRODUCT_INDUSTRY_CODE <- rep(product_industry_code, time = length(industry_code))
       data$INDUSTRY_CODE <- rep(industry_code, each = length(product_industry_code))
       
       data <- data %>% 
         dplyr::select(PRODUCT_INDUSTRY_NAME, PRODUCT_INDUSTRY_CODE, INDUSTRY_NAME, INDUSTRY_CODE, value)
       
-      
-      # Leave the names only in English
-      data$PRODUCT_INDUSTRY_NAME<-gsub("^.*\\/", "",  data$PRODUCT_INDUSTRY_NAME) %>% trim()
-      data$INDUSTRY_NAME<-gsub("^.*\\/", "",  data$INDUSTRY_NAME) %>% trim()
+      data$PRODUCT_INDUSTRY_NAME <- gsub("^.*\\/", "", data$PRODUCT_INDUSTRY_NAME) %>% trim()
+      data$INDUSTRY_NAME <- gsub("^.*\\/", "", data$INDUSTRY_NAME) %>% trim()
       
       data$value <- as.numeric(as.character(data$value))
       
       return(data)
-      
     }
+    
     
     
     # 2. RAW DATA IMPORT AND PREPROCESS  ----- 
