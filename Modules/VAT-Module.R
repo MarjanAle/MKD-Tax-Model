@@ -141,8 +141,8 @@ ui <- dashboardPage(
                        selectInput("chartSelectVAT_Revenues", "Select Chart",
                                    choices = c("Fiscal Impact and Sectoral Breakdown of VAT Revenues",
                                                "VAT Revenue Projections",
-                                               "VAT-GAP Metrics",
-                                               "Distributional Impacts on Households"
+                                               "VAT-GAP Metrics"
+                                               #"Distributional Impacts on Households"
                                    ),
                                    selected = "Fiscal Impact and Sectoral Breakdown of VAT Revenues")
                 )

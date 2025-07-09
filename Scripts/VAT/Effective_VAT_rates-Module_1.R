@@ -542,7 +542,7 @@ suppressMessages({
                                `Restaurants and Hotels` = sum(`Restaurants and Hotels-VAT`),
                                `Miscellaneous Goods and Services` = sum(`Miscellaneous Goods and Services-VAT`))
             
-            t_df1<-melt(dat_r1, id.vars = c("deciles"))
+            t_df1<-reshape2::melt(dat_r1, id.vars = c("deciles"))
             t_df1$color <- factor(t_df1$variable, labels = c("royalblue", "cyan", "darkorange", "red", "brown",
                                                              "chartreuse","orange","purple", "gold","tomato",
                                                              "darkturquoise", "forestgreen"))
@@ -579,7 +579,7 @@ suppressMessages({
             
             
             
-            t_df2<-melt(dat_r1, id.vars = c("deciles"))
+            t_df2<-reshape2::melt(dat_r1, id.vars = c("deciles"))
             t_df2$color <- factor(t_df1$variable, labels = c("royalblue", "cyan", "darkorange", "red", "brown",
                                                              "chartreuse","orange","purple", "gold","tomato",
                                                              "darkturquoise", "forestgreen"))
@@ -643,7 +643,7 @@ suppressMessages({
                 
         
                 
-                COICOP_HBS_BU<-melt(dat_r1, id.vars = c("deciles"))
+                COICOP_HBS_BU<-reshape2::melt(dat_r1, id.vars = c("deciles"))
                 
                 
                 COICOP_HBS_BU$colr <- factor(COICOP_HBS_BU$variable, labels = c("royalblue", "cyan", "darkorange", "red", "brown",
@@ -688,7 +688,7 @@ suppressMessages({
                                    `Miscellaneous Goods and Services` = sum(`Miscellaneous Goods and Services-VAT`))
                 
                 
-                COICOP_HBS_SIM<-melt(dat_r1, id.vars = c("deciles"))
+                COICOP_HBS_SIM<-reshape2::melt(dat_r1, id.vars = c("deciles"))
                 
                 COICOP_HBS_SIM$colr <- factor(COICOP_HBS_SIM$variable, labels = c("royalblue", "cyan", "darkorange", "red", "brown",
                                                                 "chartreuse","orange","purple", "gold","tomato",
