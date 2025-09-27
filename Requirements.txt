@@ -137,8 +137,6 @@ fresh	==	0.2.1
 fs	==	1.6.3
 funkyheatmap	==	0.5.0
 furrr	==	0.3.1
-future	==	1.33.2
-future.apply	==	1.11.0
 fuzzyjoin	==	0.1.6
 gargle	==	1.5.2
 gclus	==	1.3.2
