@@ -140,7 +140,7 @@ ui <- dashboardPage(
                 column(6,
                        selectInput("chartSelectVAT_Revenues", "Select Chart",
                                    choices = c("Fiscal Impact and Sectoral Breakdown of VAT Revenues",
-                                               "VAT Revenue Projections",
+                                               #"VAT Revenue Projections",
                                                "VAT-GAP Metrics"
                                                #"Distributional Impacts on Households"
                                    ),
@@ -229,7 +229,7 @@ mainServer <- function(input, output, session) {
       source(paste0(path1, "/Scripts/VAT/VAT-DataTransformation.R"))
       source(paste0(path1, "/Scripts/VAT/TaxCalculator_BU.R"))
       source(paste0(path1, "/Scripts/VAT/TaxCalculator_SIM.R"))
-      source(paste0(path1, "/Scripts/VAT/Effective_VAT_rates-Module_1.R"))
+      #source(paste0(path1, "/Scripts/VAT/Effective_VAT_rates-Module_1.R"))
       source(paste0(path1, "/Scripts/VAT/Forecast-VAT.R"))
       source(paste0(path1, "/Scripts/VAT/ChartsPreparation-VAT.R"))
       
@@ -946,7 +946,8 @@ mainServer <- function(input, output, session) {
       charts <- NULL
       tryCatch({
         charts <- VAT_metrics_fun(
-          vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,vat_sectors_normalized,SimulationYear
+          #vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,vat_sectors_normalized,SimulationYear
+          vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,forecast_combined_agg,SimulationYear
         )
       }, error = function(e) {
         cat("Error in VAT_metrics_fun:", e$message, "\n")

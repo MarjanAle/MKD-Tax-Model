@@ -2,8 +2,10 @@
 " Dashboard1-VAT metrics"
 
 # I.Function for Dashboard ------------------------------------------------------------------
-VAT_metrics_fun <- function(vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,vat_sectors_normalized,SimulationYear) {
+#VAT_metrics_fun <- function(vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,vat_sectors_normalized,SimulationYear) {
+VAT_metrics_fun <- function(vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_sectors_pie_tbl,forecast_combined_agg,SimulationYear) {
 
+  
   # Chart 1. VAT Revenue Comparison -----------------------------------------------------------------
   
 
@@ -103,6 +105,8 @@ VAT_metrics_fun <- function(vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_
   
   # Chart 4. Breakdown of VAT by Sector ---------------------------------------------------------------
   
+              
+              
               # vat_str_plt <- plot_ly(vat_sectors_normalized) %>%
               #                   add_trace(
               #                     x = ~PRODUCT_INDUSTRY_CODE, 
@@ -191,95 +195,147 @@ VAT_metrics_fun <- function(vat_gap_metrics_tbl,vat_gap_metrics_tbl_treemap,vat_
               #                   )
               # 
               
-              vat_str_plt <- plot_ly(vat_sectors_normalized) %>%
+              # vat_str_plt <- plot_ly(vat_sectors_normalized) %>%
+              #   add_trace(
+              #     x = ~PRODUCT_INDUSTRY_CODE, 
+              #     y = ~Businesses_pct, 
+              #     type = 'bar', 
+              #     name = 'Businesses',
+              #     hoverinfo = 'text',
+              #     hovertext = ~paste(
+              #       "Sector:", PRODUCT_INDUSTRY_NAME,
+              #       "<br>Businesses:", round(Businesses_pct, 1), "%"
+              #     )
+              #   ) %>%
+              #   add_trace(
+              #     x = ~PRODUCT_INDUSTRY_CODE, 
+              #     y = ~Households_pct, 
+              #     type = 'bar', 
+              #     name = 'Households',
+              #     hoverinfo = 'text',
+              #     hovertext = ~paste(
+              #       "Sector:", PRODUCT_INDUSTRY_NAME,
+              #       "<br>Households:", round(Households_pct, 1), "%"
+              #     )
+              #   ) %>%
+              #   add_trace(
+              #     x = ~PRODUCT_INDUSTRY_CODE, 
+              #     y = ~NPISHs_pct, 
+              #     type = 'bar', 
+              #     name = 'NPISHs',
+              #     hoverinfo = 'text',
+              #     hovertext = ~paste(
+              #       "Sector:", PRODUCT_INDUSTRY_NAME,
+              #       "<br>NPISHs:", round(NPISHs_pct, 1), "%"
+              #     )
+              #   ) %>%
+              #   add_trace(
+              #     x = ~PRODUCT_INDUSTRY_CODE, 
+              #     y = ~Government_pct, 
+              #     type = 'bar', 
+              #     name = 'Government',
+              #     hoverinfo = 'text',
+              #     hovertext = ~paste(
+              #       "Sector:", PRODUCT_INDUSTRY_NAME,
+              #       "<br>Government:", round(Government_pct, 1), "%"
+              #     )
+              #   ) %>%
+              #   layout(
+              #     title = list(
+              #       text = paste("Breakdown of VAT Revenues by Institutional Sector,", SimulationYear),
+              #       x = 0.5,                # Center the title horizontally
+              #       y = 1,               # Lower the title for better readability
+              #       font = list(size = 12)  # Set title font size
+              #     ),
+              #     xaxis = list(
+              #       title = '',
+              #       tickangle = -45,
+              #       tickfont = list(size = 6)
+              #     ),
+              #     yaxis = list(
+              #       title = 'Percentage',
+              #       tickformat = "",      # Disable auto-scaling to percentage format
+              #       range = c(0, 100),    # Use 0-100 range for y-axis
+              #       ticksuffix = "%"      # Append "%" to each tick
+              #     ),
+              #     legend = list(
+              #       orientation = "h",      # Horizontal legend
+              #       x = 0.5,                # Center the legend horizontally
+              #       y = -0.05,              # Move the legend closer to the chart
+              #       xanchor = "center",     # Align the legend at the center
+              #       yanchor = "top",        # Align the legend at the top of its position
+              #       font = list(size = 6)   # Use a smaller font for the legend
+              #     ),
+              #     barmode = 'stack',        # Stack the bars to maintain structure
+              #     annotations = list(
+              #       list(
+              #         # x = -0.05,
+              #         # y = -0.25,            # Adjust annotation position to avoid overlap
+              #         x = 0.0,                # Center the legend horizontally
+              #         y = -0.05, 
+              #         
+              #         text = "Source: WB staff estimation", 
+              #         showarrow = FALSE, 
+              #         xref = "paper", 
+              #         yref = "paper", 
+              #         xanchor = "left", 
+              #         yanchor = "top", 
+              #         font = list(size = 6)
+              #       )
+              #     )
+              #   )
+              
+              # NEW CHART VAT Revenue Forecast (LCU MIL)
+              
+              # Define custom colors
+              custom_colors <- c('#1f77b4', '#ff7f0e')
+              
+              
+              VAT_revenues_tbl<-forecast_combined_agg%>%
+                filter(Descriptions=='Calibrated VAT')
+              
+              VAT_revenues_tbl$year<-as.factor(VAT_revenues_tbl$year)
+              
+              # Create the plot with a dotted line for "Simulation" and fewer markers
+              #vat_revenue_plt <- plot_ly() %>%  # Start with an empty plot
+              vat_str_plt <- plot_ly() %>%  # Start with an empty plot
                 add_trace(
-                  x = ~PRODUCT_INDUSTRY_CODE, 
-                  y = ~Businesses_pct, 
-                  type = 'bar', 
-                  name = 'Businesses',
-                  hoverinfo = 'text',
-                  hovertext = ~paste(
-                    "Sector:", PRODUCT_INDUSTRY_NAME,
-                    "<br>Businesses:", round(Businesses_pct, 1), "%"
-                  )
+                  data = subset(VAT_revenues_tbl, scenario == "Baseline"),
+                  x = ~year,
+                  y = ~round(value * 1e06, 1),
+                  name = "Baseline",
+                  type = 'scatter',
+                  mode = 'lines', # Keep markers but reduce visibility
+                  hoverinfo = 'text+y',   # Keep hover info
+                  line = list(color = custom_colors[1], width = 4, dash = "solid")
                 ) %>%
                 add_trace(
-                  x = ~PRODUCT_INDUSTRY_CODE, 
-                  y = ~Households_pct, 
-                  type = 'bar', 
-                  name = 'Households',
-                  hoverinfo = 'text',
-                  hovertext = ~paste(
-                    "Sector:", PRODUCT_INDUSTRY_NAME,
-                    "<br>Households:", round(Households_pct, 1), "%"
-                  )
-                ) %>%
-                add_trace(
-                  x = ~PRODUCT_INDUSTRY_CODE, 
-                  y = ~NPISHs_pct, 
-                  type = 'bar', 
-                  name = 'NPISHs',
-                  hoverinfo = 'text',
-                  hovertext = ~paste(
-                    "Sector:", PRODUCT_INDUSTRY_NAME,
-                    "<br>NPISHs:", round(NPISHs_pct, 1), "%"
-                  )
-                ) %>%
-                add_trace(
-                  x = ~PRODUCT_INDUSTRY_CODE, 
-                  y = ~Government_pct, 
-                  type = 'bar', 
-                  name = 'Government',
-                  hoverinfo = 'text',
-                  hovertext = ~paste(
-                    "Sector:", PRODUCT_INDUSTRY_NAME,
-                    "<br>Government:", round(Government_pct, 1), "%"
-                  )
+                  data = subset(VAT_revenues_tbl, scenario == "Simulation"),
+                  x = ~year,
+                  y = ~round(value * 1e06, 1),
+                  name = "Simulation",
+                  type = 'scatter',
+                  mode = 'lines', # Keep markers for hover points
+                  hoverinfo = 'text+y',   # Keep hover info
+                  line = list(color = custom_colors[2], width = 4, dash = "dot")  # Dotted line for simulation
                 ) %>%
                 layout(
-                  title = list(
-                    text = paste("Breakdown of VAT Revenues by Institutional Sector,", SimulationYear),
-                    x = 0.5,                # Center the title horizontally
-                    y = 1,               # Lower the title for better readability
-                    font = list(size = 12)  # Set title font size
-                  ),
-                  xaxis = list(
-                    title = '',
-                    tickangle = -45,
-                    tickfont = list(size = 6)
-                  ),
-                  yaxis = list(
-                    title = 'Percentage',
-                    tickformat = "",      # Disable auto-scaling to percentage format
-                    range = c(0, 100),    # Use 0-100 range for y-axis
-                    ticksuffix = "%"      # Append "%" to each tick
-                  ),
-                  legend = list(
-                    orientation = "h",      # Horizontal legend
-                    x = 0.5,                # Center the legend horizontally
-                    y = -0.05,              # Move the legend closer to the chart
-                    xanchor = "center",     # Align the legend at the center
-                    yanchor = "top",        # Align the legend at the top of its position
-                    font = list(size = 6)   # Use a smaller font for the legend
-                  ),
-                  barmode = 'stack',        # Stack the bars to maintain structure
+                  title = paste("VAT Revenue Forecast (LCU MIL),", min(forecast_horizon), "-", max(forecast_horizon)),
+                  xaxis = list(title = '', tickformat = 'd'),
+                  yaxis = list(title = ' ', rangemode = 'tozero'),
                   annotations = list(
-                    list(
-                      # x = -0.05,
-                      # y = -0.25,            # Adjust annotation position to avoid overlap
-                      x = 0.0,                # Center the legend horizontally
-                      y = -0.05, 
-                      
-                      text = "Source: WB staff estimation", 
-                      showarrow = FALSE, 
-                      xref = "paper", 
-                      yref = "paper", 
-                      xanchor = "left", 
-                      yanchor = "top", 
-                      font = list(size = 6)
-                    )
+                    x = -0.02,
+                    y = -0.1,
+                    text = "Source: WB staff estimation",
+                    showarrow = FALSE,
+                    xref = 'paper',
+                    yref = 'paper',
+                    align = 'left'
                   )
                 )
+              
+              
+              
               
         
   # Export Charts -----------------------------------------------------------

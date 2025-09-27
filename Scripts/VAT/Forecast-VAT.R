@@ -398,6 +398,7 @@ forecast_horizon <- seq(base_year_VAT, end_year)
                             dplyr::select(-c(Nominal_GDP,Nominal_VAT_NET,Descriptions,scenario))%>%
                             dplyr::rename("Tax Expenditures (Million LCU)"="value")%>%
                             dplyr::mutate('Tax Expenditures (Million LCU)'=round(`Tax Expenditures (Million LCU)`,1))%>%
+                            dplyr::filter(year==2020)
                             data.table()
                 
                 
