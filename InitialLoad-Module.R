@@ -85,8 +85,8 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
                          
                           
                           #dt<-read_csv("mpin_epdd_nace_final334.csv")%>%data.table()
-                          #dt<-read_csv("mpin_epdd_nace_final.csv")%>%data.table()
-                            dt<-read_csv("pit_synthetic.csv")%>%data.table()
+                          dt<-read_csv("mpin_epdd_nace_final.csv")%>%data.table()
+                           # dt<-read_csv("pit_synthetic.csv")%>%data.table()
                           
                           
                           
@@ -105,7 +105,9 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
                           
                           n <- NROW(dt)
                           
-                          same_weight<-56
+                          same_weight<-1
+                          
+                          #same_weight<-56  ### #<--- Fiscal concul
                           
                           weights_pit <- data.table(
                                                     t0 = rep(same_weight, n),
@@ -429,21 +431,21 @@ path1<-"C:/Users/wb591157/OneDrive - WBG/Documents/Models/MKD-Tax-Model" ##<---P
     
     
     # 2.6 HBS  ----------------------------------------
-    # Import data
-    data4_hbs <- read_excel("Data4_hbs2020.xlsx")
-    
-    # Setting columns names
-    data4_hbs<-data4_hbs%>%
-      dplyr::select(-c('kvartal','Year'))
-    
-    colnames(data4_hbs)<-c("number_hh","01","02","03","04","05","06","07","08","09","10","11","12","Consumption_own")
-    
-    # Preparing data for merging 
-    data4_hbs_long<-data4_hbs%>%
-      pivot_longer(!number_hh, names_to = "COICOP_section", values_to = "Expenditures")
-    
-    weight_hbs <- read_excel("Weight_hbs2020.xls")
-    
+    # # Import data
+    # data4_hbs <- read_excel("Data4_hbs2020.xlsx")
+    # 
+    # # Setting columns names
+    # data4_hbs<-data4_hbs%>%
+    #   dplyr::select(-c('kvartal','Year'))
+    # 
+    # colnames(data4_hbs)<-c("number_hh","01","02","03","04","05","06","07","08","09","10","11","12","Consumption_own")
+    # 
+    # # Preparing data for merging 
+    # data4_hbs_long<-data4_hbs%>%
+    #   pivot_longer(!number_hh, names_to = "COICOP_section", values_to = "Expenditures")
+    # 
+    # weight_hbs <- read_excel("Weight_hbs2020.xls")
+    # 
     
     # 2.7 MACRO-FISCAL INDICATORS ---------------------------------------------
     MACRO_FISCAL_INDICATORS <- read_excel("MACRO_FISCAL_INDICATORS.xlsx")
